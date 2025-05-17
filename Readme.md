@@ -152,9 +152,8 @@ The application uses `coinbase.py` to manage an Ethereum wallet:
 
 ## 8. Future Development (Project Vision)
 
-*   Develop the full marketplace UI/UX for VCs and Crypto projects.
-*   Expand agent capabilities with more specialized tools for financial analysis, project vetting, and market research.
-*   Implement the matchmaking algorithm.
-*   Integrate databases for storing project and VC details.
+*   Develop the full marketplace UI/UX for Investors and Crypto Projects for analysis and trading.
+*   Expand agent capabilities with more specialized tools for financial analysis, project vetting, and market research using XALPHA's APIS.
 
 This README provides a guide to understanding, setting up, and running the current AI agent API component of the larger marketplace application.
+This is just a demo app and can vary from the actual integration on https://x-alpha.ai
