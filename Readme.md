@@ -1,20 +1,34 @@
-# Crypto VC & Project Marketplace Agent API
+# X-Alpha: Crypto Agent API
 
 ## 1. Overview
 
-This project is the backend API for a marketplace application designed to connect Venture Capitalists (VCs) with crypto utility projects. The platform aims to provide comprehensive details for both VCs and projects, enabling VCs to conduct thorough research and projects to find relevant VCs in their domain. A matchmaking feature is also envisioned to facilitate connections.
+This project provides the backend API for an AI-powered agent designed to interact with Ethereum-based blockchains. It serves as a core component for a larger X-ALPHA's larger vision to simplify investments and reduce, enabling features that require on-chain data access and transaction capabilities.
 
-This component specifically provides an AI-powered chat interface, allowing users to interact with an agent capable of performing on-chain actions and queries via the Coinbase AgentKit and Langchain.
+The agent is built using Python, leveraging:
+*   **Coinbase AgentKit** to provide tools for on-chain interactions through an `EthAccountWalletProvider`.
+*   **Google's Gemini (gemini-2.0-flash)** for language understanding and generation.
+*   **Langchain and LangGraph** for structuring the agent and managing conversational flow with memory.
+*   **Flask** to expose the agent's capabilities via a simple REST API.
+
+The system securely manages an Ethereum wallet, allowing the agent to perform actions like querying token balances, interacting with smart contracts (e.g., Uniswap), and retrieving blockchain data.
 
 ## 2. Features
 
-*   **AI Chat Agent:** Interactive chat endpoint (`/ai/chat`) powered by Google's Generative AI (Gemini).
-*   **On-Chain Interaction:** The agent can interact with Ethereum-based blockchains (e.g., send transactions, query data, interact with contracts) using a configured wallet.
-*   **Wallet Management:** Securely manages an Ethereum wallet, either by using a provided private key, loading from a file, or generating a new one.
-*   **Extensible Agent Capabilities:** Leverages Coinbase AgentKit and Langchain for integrating various tools and action providers (e.g., ERC20, Pyth, Uniswap).
-*   **Flask-based API:** Built with Flask, providing a robust and simple web server.
-*   **CORS Enabled:** Configured for permissive CORS settings, suitable for development environments.
-*   **Health Check:** Basic health check endpoint (`/ai/`) to verify API status.
+*   **AI Chat Agent:** Interactive chat endpoint (`/ai/chat`) powered by Google's Gemini (gemini-2.0-flash model) via Langchain.
+*   **Conversational Memory:** Maintains context across multiple interactions within the same conversation using a `thread_id` managed by LangGraph's `MemorySaver`.
+*   **On-Chain Interaction via Coinbase AgentKit:**
+    *   **Wallet Management:** Securely manages an Ethereum wallet (loaded from private key, file, or newly generated) using `EthAccountWalletProvider`.
+    *   **Action Providers:** Equipped with tools for interacting with:
+        *   ERC20 tokens (`erc20_action_provider`)
+        *   Pyth Network oracles (`pyth_action_provider`)
+        *   Core wallet functions (`wallet_action_provider`)
+        *   Wrapped Ether (WETH) (`weth_action_provider`)
+        *   Uniswap (`uniswap_action_provider`)
+*   **Flask-based API:**
+    *   Endpoint for chat: `POST /ai/chat`
+    *   Health check endpoint: `GET /ai/`
+*   **CORS Enabled:** Configured for permissive CORS, suitable for development.
+*   **Environment-Driven Configuration:** Key settings (API keys, RPC URLs, etc.) are managed through environment variables.
 
 ## 3. Tech Stack
 
@@ -67,6 +81,7 @@ This component specifically provides an AI-powered chat interface, allowing user
     PRIVATE_KEY="your_0x_prefixed_private_key"
 
     # Ethereum Network Chain ID (e.g., 1 for Mainnet, 11155111 for Sepolia, 8453 for Base)
+    # Default is 8453 as per coinbase.py
     CHAIN_ID="8453"
 
     # Ethereum RPC Provider URL
@@ -144,11 +159,12 @@ Serving on http://0.0.0.0:8080
 
 ## 7. Wallet Management
 
-The application uses `coinbase.py` to manage an Ethereum wallet:
-*   It first checks for a `PRIVATE_KEY` in the `.env` file.
-*   If not found, it attempts to load a wallet from a file named `wallet_data_<CHAIN_ID>.txt` (e.g., `wallet_data_8453.txt`).
-*   If no existing wallet is found, a new Ethereum account is generated, and its private key is saved to `wallet_data_<CHAIN_ID>.txt` for persistence across sessions.
-*   **Security Note:** The generated `wallet_data_*.txt` file contains the private key. Ensure this file is kept secure and is included in your `.gitignore` if you are using version control.
+The application uses `coinbase.py` (specifically the `wallet_setup` function) to manage an Ethereum wallet. The private key is sourced with the following priority:
+1.  From the `PRIVATE_KEY` environment variable.
+2.  From a local file named `wallet_data_<CHAIN_ID>.txt` (e.g., `wallet_data_8453.txt` if `CHAIN_ID` is 8453).
+3.  If neither is found, a new Ethereum account is generated, and its private key and chain ID are saved to `wallet_data_<CHAIN_ID>.txt` for persistence across sessions.
+
+**Security Note:** The `wallet_data_*.txt` file contains the private key. Ensure this file is kept secure and is included in your `.gitignore` if you are using version control.
 
 ## 8. Future Development (Project Vision)
 
@@ -156,4 +172,4 @@ The application uses `coinbase.py` to manage an Ethereum wallet:
 *   Expand agent capabilities with more specialized tools for financial analysis, project vetting, and market research using XALPHA's APIS.
 
 This README provides a guide to understanding, setting up, and running the current AI agent API component of the larger marketplace application.
-This is just a demo app and can vary from the actual integration on https://x-alpha.ai
+This is just a demo app and the agent's capabilities can be further extended. The live version might differ based on the features implemented on https://x-alpha.ai
