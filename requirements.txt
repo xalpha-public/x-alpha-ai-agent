@@ -1,0 +1,10 @@
+coinbase-agentkit
+coinbase-agentkit-langchain
+langchain
+langchain-google-genai
+python-dotenv
+uniswap_universal_router_decoder
+flask
+flask-cors
+waitress
+langgraph

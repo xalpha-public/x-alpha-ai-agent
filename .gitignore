@@ -1,0 +1,16 @@
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+storage
+.vscode
+__pycache__
+.vercel
+.DS_Store
+.netlify
+
+# Python
+venv
+wallet_data*
